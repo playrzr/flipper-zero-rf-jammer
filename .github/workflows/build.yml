@@ -1,0 +1,35 @@
+name: Build Flipper Jammer App
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout Your Repo
+      uses: actions/checkout@v4
+
+    - name: Clone Flipper Firmware
+      run: git clone --recursive https://github.com/flipperdevices/flipperzero-firmware.git
+
+    - name: Copy Jammer App
+      run: |
+        mkdir -p flipperzero-firmware/applications_user/jammer
+        cp jammer_app.c jammer_app.h application.fam rf_jammer/CMakeLists.txt flipperzero-firmware/applications_user/jammer/
+        cp -r icons flipperzero-firmware/applications_user/jammer/
+
+    - name: Register App in CMake
+      run: echo 'add_subdirectory(jammer)' >> flipperzero-firmware/applications_user/CMakeLists.txt
+
+    - name: Build App
+      run: |
+        cd flipperzero-firmware
+        ./fbt fap_jammer
+
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: jammer.fap
+        path: flipperzero-firmware/dist/apps/jammer.fap
