@@ -17,7 +17,8 @@ jobs:
     - name: Copy Jammer App
       run: |
         mkdir -p flipperzero-firmware/applications_user/jammer
-        cp jammer_app.c jammer_app.h application.fam rf_jammer/CMakeLists.txt flipperzero-firmware/applications_user/jammer/
+        cp jammer_app.c jammer_app.h application.fam flipperzero-firmware/applications_user/jammer/
+        cp rf_jammer/CMakeLists.txt flipperzero-firmware/applications_user/jammer/
         cp -r icons flipperzero-firmware/applications_user/jammer/
 
     - name: Register App in CMake
